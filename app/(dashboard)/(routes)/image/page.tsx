@@ -20,7 +20,7 @@ import BotAvatar from "@/components/bot-avatar";
 import { UserAvatar } from "@/components/user-avatar";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 
-const ConversationPage = () => {
+const ImagePage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -135,4 +135,4 @@ const ConversationPage = () => {
     </div>
   );
 };
-export default ConversationPage;
+export default ImagePage;
