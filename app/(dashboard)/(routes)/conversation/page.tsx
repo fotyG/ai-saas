@@ -3,6 +3,7 @@
 import * as z from "zod";
 import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -17,11 +18,13 @@ import { Input } from "@/components/ui/input";
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import BotAvatar from "@/components/bot-avatar";
+import { useProModal } from "@/hooks/use-pro-modal";
 import { UserAvatar } from "@/components/user-avatar";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 
 const ConversationPage = () => {
   const router = useRouter();
+  const proModal = useProModal();
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,8 +50,11 @@ const ConversationPage = () => {
       setMessages((current) => [...current, userMessage, response.data]);
       form.reset();
     } catch (error: any) {
-      // TODO: Open Pro Modal
-      console.log(error);
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      } else {
+        toast.error("Something went wrong");
+      }
     } finally {
       router.refresh();
     }
